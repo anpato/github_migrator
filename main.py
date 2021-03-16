@@ -90,9 +90,10 @@ def clear_dir():
     os.system('rm -rf ./repos')
 
 
-repos = get_all()
-cloned_repos = clone(repos)
-create_repos(cloned_repos)
-clear_dir()
-print('Done, Enjoy your new repos on {out}! \N{grinning face}'.format(
-    out=out_org))
+if __name__ == 'main':
+    repos = get_all()
+    cloned_repos = clone(repos)
+    create_repos(cloned_repos)
+    clear_dir()
+    print('Done, Enjoy your new repos on {out}! \N{grinning face}'.format(
+        out=out_org))
