@@ -35,7 +35,7 @@ class Github:
         headers: dict = self.gen_headers()
         url: str = "{base_url}/orgs/{org}/repos".format(
             base_url=self.base_url, org=self.out_org)
-        data = {**params, "org": self.out_org}
+        data = {**params, "org": self.out_org, "private": True}
         res = requests.post(url=url, data=json.dumps(data),
                             headers=headers)
         return res.json()
