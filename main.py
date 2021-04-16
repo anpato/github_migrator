@@ -10,7 +10,7 @@ TOKEN = os.getenv('GITHUB_TOKEN')
 src_org = input("What org are you forking from? \n Org Name: ").strip()
 out_org = input("What org are your forking to? \n Org Name: ").strip()
 if TOKEN == None:
-    TOKEN = input("Enter your personal access token. You can generate one with these instructions:https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token \n Your Token: ").strip()
+    TOKEN = input("Enter your personal access token. You can generate one with these instructions: https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token \n Your Token: ").strip()
 wants_save_token = input(
     "Would you like to save your token for later use? (y/n): ").strip()
 
