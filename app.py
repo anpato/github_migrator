@@ -55,6 +55,5 @@ def init_upload(message):
 
 
 if __name__ == '__main__':
-    print('Server Running')
-    socket.init_app(app, async_mode='threading', cors_allowed_origins='*')
     app.run()
+    socket.init_app(app, async_mode='gevent', cors_allowed_origins='*')
