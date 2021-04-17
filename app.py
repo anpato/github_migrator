@@ -7,10 +7,19 @@ from resources.repo import Repos
 from resources.org import Org
 from utils import clone, create_repos, clear_dir
 import time
+import os
+from dotenv import load_dotenv
+load_dotenv()
 app = Flask(__name__)
 CORS(app)
-app.debug = True
-app.env = 'development'
+
+env = os.getenv('ENVIRONMENT')
+
+if env and env == 'production':
+    app.env = env
+else:
+    app.debug = True
+    app.env = 'development'
 
 api = Api(app)
 
