@@ -41,8 +41,8 @@ def init_upload(message):
     target = message['targetOrg']
     upload = clone(repos, target, token)
     create_repos(upload[0], token, target)
-    clear_dir(upload[1])
     emit('UploadProgress-{}'.format(token), {"status": "Finished"})
+    clear_dir(upload[1])
 
 
 if __name__ == '__main__':
