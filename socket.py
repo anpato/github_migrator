@@ -3,6 +3,8 @@ from utils import clone, create_repos, clear_dir
 from utils.socket import socket
 from flask_socketio import SocketIO, emit
 
+app = Flask(__name__)
+
 
 @socket.on('connect')
 def connected():
@@ -29,3 +31,7 @@ def init_upload(message):
     create_repos(upload[0], token, target)
     emit('UploadProgress-{}'.format(token), {"status": "Finished"})
     clear_dir(upload[1])
+
+
+if __name__ == '__main__':
+    socket.init_app(app, cors_allowed_origins='*')

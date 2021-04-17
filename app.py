@@ -1,12 +1,8 @@
 from flask import Flask
 from flask_restful import Api
 from flask_cors import CORS
-
-
 from resources.repo import Repos
 from resources.org import Org
-
-import time
 import os
 from dotenv import load_dotenv
 load_dotenv()
