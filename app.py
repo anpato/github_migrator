@@ -6,10 +6,13 @@ from flask_socketio import SocketIO, emit
 from resources.repo import Repos
 from resources.org import Org
 from utils import clone, create_repos, clear_dir
+from engineio.payload import Payload
 import time
 import os
 from dotenv import load_dotenv
 load_dotenv()
+
+
 app = Flask(__name__)
 CORS(app)
 
@@ -22,7 +25,14 @@ else:
     app.env = 'development'
 
 api = Api(app)
-
+print(Payload.max_decode_packets)
+Payload.max_decode_packets = 100000000000000000000000
+print(Payload.max_decode_packets)
+socket = SocketIO(app, cors_allowed_origins="*",
+                  engineio_logger=True,
+                  async_mode='threading',
+                  ping_timeout=20,
+                  logger=True, max_decode_packets=500)
 api.add_resource(Repos, '/repos')
 api.add_resource(Org, '/orgs')
 
@@ -50,13 +60,9 @@ def init_upload(message):
     target = message['targetOrg']
     upload = clone(repos, target, token)
     create_repos(upload[0], token, target)
-    emit('UploadProgress-{}'.format(token), {"status": "Finished"})
+    emit('UploadProgress-{token}'.format(token=token), {"status": "Finished"})
     clear_dir(upload[1])
 
 
 if __name__ == '__main__':
-    socket.init_app(app, cors_allowed_origins="*",
-                    async_mode='gevent',
-                    engineio_logger=True,
-                    logger=True)
-    # app.run()
+    socket.run(app)
