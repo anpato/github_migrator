@@ -1,23 +1,24 @@
 from github import Github
 import math
 from flask import request
-import threading
+import os
+from flask_socketio import emit
 
 
 def get_all(token, org, page, limit):
     gh = Github()
     total = gh.get_total_repos(org, token)
     total_pages = math.ceil(total / int(limit))
-    repo_list = []
     src_repos = gh.get_org_repos(page, limit, org, token)
     return {"repos": src_repos, "total_pages": total_pages}
 
 
-def clone(repos: list, response, token: str):
-    storage_path = './{token}-repos'.format(token)
+def clone(repos: list, target: str, token: str):
+    storage_path = './{target}-repos'.format(target=target)
     cloned_repos = []
     if not os.path.isdir(storage_path):
         os.mkdir(storage_path)
+    count = 1
     for repo in repos:
         try:
             cmd: str = "git -C {storage} clone {clone_url} -q".format(
@@ -30,11 +31,16 @@ def clone(repos: list, response, token: str):
             cloned_repos.append(repo_data)
         except:
             pass
-    return cloned_repos
+
+        emit('UploadProgress-{token}'.format(token=token), {"status": "Cloning",
+                                                            "progress": count}, namespace='/upload')
+        count += 1
+    return (cloned_repos, storage_path)
 
 
-def create_repos(repos: list, token: str):
-    bar = Bar('Creating and Pushing Repos', max=len(repos))
+def create_repos(repos: list, token: str, out_org: str):
+    gh = Github()
+    count = 1
     for r in repos:
         body = {
             "visibility": "private",
@@ -42,7 +48,7 @@ def create_repos(repos: list, token: str):
             "description": r["desc"]
         }
         try:
-            res = gh.create_repo(body)
+            res = gh.create_repo(body, token, out_org)
             clone_url = res['ssh_url']
             print("\n")
             cmd: str = "cd {dir} && git push -u --mirror -q {url}".format(
@@ -50,13 +56,13 @@ def create_repos(repos: list, token: str):
             os.system(cmd)
         except:
             pass
-        bar.next()
-    bar.finish()
+        emit('UploadProgress-{token}'.format(token=token), {"status": "Creating",
+                                                            "progress": count}, namespace='/upload')
+        count += 1
 
 
-def clear_dir():
-    print('Clearing Repos')
-    os.system('rm -rf ./repos')
+def clear_dir(path):
+    os.system('rm -rf ./{path}'.format(path=path))
 
 
 def get_token():
@@ -65,12 +71,3 @@ def get_token():
         return token
     except:
         return "No Token"
-
-
-class Thread(threading.Thread):
-    def __init__(self):
-        self.progress = 0
-        super().__init__()
-
-    def run(self, curren: int, total: int, cb, args):
-        return cb(args)

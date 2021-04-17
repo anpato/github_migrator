@@ -33,11 +33,11 @@ class Github:
         total = results['total_private_repos'] + results['public_repos']
         return total
 
-    def create_repo(self, params: dict, auth_token: str):
+    def create_repo(self, params: dict, auth_token: str, out_org: str):
         headers: dict = self.gen_headers(auth_token)
         url: str = "{base_url}/orgs/{org}/repos".format(
-            base_url=self.base_url, org=self.out_org)
-        data = {**params, "org": self.out_org, "private": True}
+            base_url=self.base_url, org=out_org)
+        data = {**params, "org": out_org, "private": True}
         res = requests.post(url=url, data=json.dumps(data),
                             headers=headers)
         return res.json()
