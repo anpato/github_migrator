@@ -55,5 +55,5 @@ def init_upload(message):
 
 
 if __name__ == '__main__':
-    socket.init_app(app, cors_allowed_origins='*')
+    socket.init_app(app, async_mode='threading', cors_allowed_origins='*')
     app.run()
