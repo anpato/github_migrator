@@ -14,11 +14,11 @@ def get_all(token, org, page, limit):
 
 
 def clone(repos: list, target: str, token: str, dirname: str):
-    storage_path = '{dirname}/tmp/{target}-repos'.format(
+    storage_path = '{dirname}/{target}-repos'.format(
         dirname=dirname, target=target)
     cloned_repos = []
     if not os.path.isdir(storage_path):
-        os.mkdir(storage_path)
+        os.system('mkdir {}'.format(storage_path))
     count = 1
     for repo in repos:
         try:
@@ -36,7 +36,6 @@ def clone(repos: list, target: str, token: str, dirname: str):
         emit('UploadProgress-{token}'.format(token=token), {"status": "Cloning",
                                                             "progress": count}, namespace='/upload')
         count += 1
-        print(count)
     return (cloned_repos, storage_path)
 
 
