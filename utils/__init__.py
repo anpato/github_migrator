@@ -20,10 +20,12 @@ def clone(repos: list, target: str, token: str, dirname: str):
     if not os.path.isdir(storage_path):
         os.mkdir(storage_path)
     count = 1
+    username = os.getenv('GH_USERNAME')
+    password = os.getenv('GH_PASSWORD')
     for repo in repos:
         try:
             cmd: str = "git -C {storage} clone {clone_url} -q".format(
-                clone_url=repo['clone_url'], storage=storage_path)
+                clone_url=repo['clone_url'].replace('https://', 'https://{username}:{password}@'.format(username=username, password=password)), storage=storage_path)
             os.system(cmd)
             path = "{storage}/{repo_name}".format(storage=storage_path,
                                                   repo_name=repo['name'])
