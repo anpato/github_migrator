@@ -15,7 +15,7 @@ def get_all(token, org, page, limit):
 
 def clone(repos: list, target: str, token: str, dirname: str):
     storage_path = './{target}-repos'.format(
-        dirname=dirname, target=target)
+        target=target)
     cloned_repos = []
     if not os.path.isdir(storage_path):
         os.mkdir(storage_path)
