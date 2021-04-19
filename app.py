@@ -25,9 +25,9 @@ else:
     app.env = 'development'
 
 api = Api(app)
-print(Payload.max_decode_packets)
-Payload.max_decode_packets = 100000000000000000000000
-print(Payload.max_decode_packets)
+
+Payload.max_decode_packets = 500
+
 socket = SocketIO(app, cors_allowed_origins="*",
                   engineio_logger=True,
                   async_mode='threading',
@@ -61,8 +61,8 @@ def init_upload(message):
     target = message['targetOrg']
     upload = clone(repos, target, token, dirname)
     create_repos(upload[0], token, target)
-    clear_dir(upload[1])
     emit('UploadProgress-{token}'.format(token=token), {"status": "Finished"})
+    clear_dir(upload[1])
 
 
 if __name__ == '__main__':

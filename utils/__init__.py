@@ -14,8 +14,8 @@ def get_all(token, org, page, limit):
 
 
 def clone(repos: list, target: str, token: str, dirname: str):
-    storage_path = './{target}-repos'.format(
-        target=target)
+    storage_path = '{dirname}/{target}-repos'.format(
+        dirname=dirname, target=target)
     cloned_repos = []
     if not os.path.isdir(storage_path):
         os.mkdir(storage_path)
@@ -36,7 +36,6 @@ def clone(repos: list, target: str, token: str, dirname: str):
         emit('UploadProgress-{token}'.format(token=token), {"status": "Cloning",
                                                             "progress": count}, namespace='/upload')
         count += 1
-        print(count)
     return (cloned_repos, storage_path)
 
 
@@ -56,15 +55,15 @@ def create_repos(repos: list, token: str, out_org: str):
             cmd: str = "cd {dir} && git push -u --mirror -q {url}".format(
                 dir=r['path'], url=clone_url)
             os.system(cmd)
-        except:
-            pass
+        except Exception as error:
+            print(error)
         emit('UploadProgress-{token}'.format(token=token), {"status": "Creating",
                                                             "progress": count}, namespace='/upload')
         count += 1
 
 
 def clear_dir(path):
-    os.system('rm -rf ./{path}'.format(path=path))
+    os.system('rm -rf {path}'.format(path=path))
 
 
 def get_token():
