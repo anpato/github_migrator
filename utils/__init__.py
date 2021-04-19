@@ -4,6 +4,9 @@ from flask import request
 import os
 from flask_socketio import emit
 
+username = os.getenv('GH_USERNAME')
+password = os.getenv('GH_PASSWORD')
+
 
 def get_all(token, org, page, limit):
     gh = Github()
@@ -15,18 +18,17 @@ def get_all(token, org, page, limit):
 
 def clone(repos: list, target: str, token: str, dirname: str):
     try:
-        storage_path = '{dirname}/{target}-repos'.format(
+        storage_path = '{dirname}/tmp/{target}-repos'.format(
             dirname=dirname, target=target)
         cloned_repos = []
         if not os.path.isdir(storage_path):
             os.system("mkdir {}".format(storage_path))
         count = 1
-        # username = os.getenv('GH_USERNAME')
-        # password = os.getenv('GH_PASSWORD')
+
         for repo in repos:
             try:
                 cmd: str = "git -C {storage} clone {clone_url} -q".format(
-                    clone_url=repo['clone_url'].replace('https://', 'https://{token}@'.format(token=token)), storage=storage_path)
+                    clone_url=repo['clone_url'].replace('https://', 'https://{username}:{password}@'.format(username=username, password=password)), storage=storage_path)
                 os.system(cmd)
                 path = "{storage}/{repo_name}".format(storage=storage_path,
                                                       repo_name=repo['name'])
@@ -56,7 +58,8 @@ def create_repos(repos: list, token: str, out_org: str):
         try:
 
             res = gh.create_repo(body, token, out_org)
-            clone_url = res['clone_url']
+            clone_url = res['clone_url'].replace(
+                'https://', 'https://{username}:{password}@'.format(username=username, password=password))
             print("\n")
             cmd: str = "cd {dir} && git push -u --mirror -q {url}".format(
                 dir=r['path'], url=clone_url)
