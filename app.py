@@ -41,12 +41,6 @@ def connected():
     print('Connected')
 
 
-@socket.on('message')
-def get_message(message):
-    print(message)
-    pass
-
-
 @socket.on('disconnect')
 def disconnect():
     print('Disconnected')

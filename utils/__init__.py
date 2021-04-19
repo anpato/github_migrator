@@ -15,7 +15,6 @@ def get_all(token, org, page, limit):
 
 def clone(repos: list, target: str, token: str, dirname: str):
     USERNAME = os.getenv('GH_USERNAME')
-    # PASSWORD = os.getenv('GH_PASSWORD')
     storage_path = '{dirname}/{target}-repos'.format(
         dirname=dirname, target=target)
     cloned_repos = []
@@ -43,7 +42,6 @@ def clone(repos: list, target: str, token: str, dirname: str):
 
 def create_repos(repos: list, token: str, out_org: str):
     USERNAME = os.getenv('GH_USERNAME')
-    # PASSWORD = os.getenv('GH_PASSWORD')
     gh = Github()
     count = 1
     for r in repos:
