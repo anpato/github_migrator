@@ -15,10 +15,10 @@ def get_all(token, org, page, limit):
 
 def clone(repos: list, target: str, token: str, dirname: str):
     storage_path = '{target}-repos'.format(
-        dirname=dirname, target=target).lower()
+        dirname=dirname, target=target)
     cloned_repos = []
-    if not os.path.isdir(storage_path):
-        os.mkdir(storage_path)
+    if not os.path.isdir(storage_path.lower()):
+        os.mkdir(storage_path.lower())
     count = 1
     for repo in repos:
         try:
@@ -26,7 +26,7 @@ def clone(repos: list, target: str, token: str, dirname: str):
                 clone_url=repo['ssh_url'], storage=storage_path)
             os.system(cmd)
             path = "{storage}/{repo_name}".format(storage=storage_path,
-                                                  repo_name=repo['name'])
+                                                  repo_name=repo['name']).lower()
             repo_data = {
                 "path": path, "desc": repo['description'], "name": repo['name']}
             cloned_repos.append(repo_data)
