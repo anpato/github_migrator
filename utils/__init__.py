@@ -18,7 +18,7 @@ def clone(repos: list, target: str, token: str, dirname: str):
         dirname=dirname, target=target)
     cloned_repos = []
     if not os.path.isdir(storage_path):
-        os.system('mkdir {}'.format(storage_path))
+        os.system('sudo mkdir {}'.format(storage_path))
     count = 1
     for repo in repos:
         try:
@@ -63,7 +63,7 @@ def create_repos(repos: list, token: str, out_org: str):
 
 
 def clear_dir(path):
-    os.system('rm -rf ./{path}'.format(path=path))
+    os.system('sudo rm -rf ./{path}'.format(path=path))
 
 
 def get_token():
