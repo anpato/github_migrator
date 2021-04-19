@@ -56,10 +56,10 @@ def create_repos(repos: list, token: str, out_org: str):
         try:
 
             res = gh.create_repo(body, token, out_org)
-            clone_url = res['ssh_url']
+            clone_url = res['clone_url']
             print("\n")
             cmd: str = "cd {dir} && git push -u --mirror -q {url}".format(
-                dir=r['path'].replace('/app/', ''), url=clone_url)
+                dir=r['path'], url=clone_url)
             os.system(cmd)
         except Exception as error:
             print(error)
