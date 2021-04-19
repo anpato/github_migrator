@@ -18,7 +18,7 @@ def clone(repos: list, target: str, token: str, dirname: str):
         dirname=dirname, target=target)
     cloned_repos = []
     if not os.path.isdir(storage_path):
-        os.system('sudo mkdir {}'.format(storage_path))
+        os.system('mkdir {storage}'.format(storage=storage_path))
     count = 1
     for repo in repos:
         try:
