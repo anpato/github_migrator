@@ -14,31 +14,34 @@ def get_all(token, org, page, limit):
 
 
 def clone(repos: list, target: str, token: str, dirname: str):
-    storage_path = '{dirname}/{target}-repos'.format(
-        dirname=dirname, target=target)
-    cloned_repos = []
-    if not os.path.isdir(storage_path):
-        os.mkdir(storage_path)
-    count = 1
-    username = os.getenv('GH_USERNAME')
-    password = os.getenv('GH_PASSWORD')
-    for repo in repos:
-        try:
-            cmd: str = "git -C {storage} clone {clone_url} -q".format(
-                clone_url=repo['clone_url'].replace('https://', 'https://{token}@'.format(token=token)), storage=storage_path)
-            os.system(cmd)
-            path = "{storage}/{repo_name}".format(storage=storage_path,
-                                                  repo_name=repo['name'])
-            repo_data = {
-                "path": path, "desc": repo['description'], "name": repo['name']}
-            cloned_repos.append(repo_data)
-        except Exception as error:
-            print(error)
+    try:
+        storage_path = '{dirname}/{target}-repos'.format(
+            dirname=dirname, target=target)
+        cloned_repos = []
+        if not os.path.isdir(storage_path):
+            os.mkdir(storage_path)
+        count = 1
+        username = os.getenv('GH_USERNAME')
+        password = os.getenv('GH_PASSWORD')
+        for repo in repos:
+            try:
+                cmd: str = "git -C {storage} clone {clone_url} -q".format(
+                    clone_url=repo['clone_url'].replace('https://', 'https://{token}@'.format(token=token)), storage=storage_path)
+                os.system(cmd)
+                path = "{storage}/{repo_name}".format(storage=storage_path,
+                                                      repo_name=repo['name'])
+                repo_data = {
+                    "path": path, "desc": repo['description'], "name": repo['name']}
+                cloned_repos.append(repo_data)
+            except Exception as error:
+                print(error)
 
-        emit('UploadProgress-{token}'.format(token=token), {"status": "Cloning",
-                                                            "progress": count}, namespace='/upload')
-        count += 1
-    return (cloned_repos, storage_path)
+            emit('UploadProgress-{token}'.format(token=token), {"status": "Cloning",
+                                                                "progress": count}, namespace='/upload')
+            count += 1
+        return (cloned_repos, storage_path)
+    except Exception as error:
+        print('Mkdir Error', error)
 
 
 def create_repos(repos: list, token: str, out_org: str):
