@@ -15,7 +15,7 @@ def get_all(token, org, page, limit):
 
 def clone(repos: list, target: str, token: str, dirname: str):
     USERNAME = os.getenv('GH_USERNAME')
-    PASSWORD = os.getenv('GH_PASSWORD')
+    # PASSWORD = os.getenv('GH_PASSWORD')
     storage_path = '{dirname}/{target}-repos'.format(
         dirname=dirname, target=target)
     cloned_repos = []
@@ -43,7 +43,7 @@ def clone(repos: list, target: str, token: str, dirname: str):
 
 def create_repos(repos: list, token: str, out_org: str):
     USERNAME = os.getenv('GH_USERNAME')
-    PASSWORD = os.getenv('GH_PASSWORD')
+    # PASSWORD = os.getenv('GH_PASSWORD')
     gh = Github()
     count = 1
     for r in repos:
@@ -55,7 +55,7 @@ def create_repos(repos: list, token: str, out_org: str):
         try:
             res = gh.create_repo(body, token, out_org)
             clone_url = res['clone_url'].replace(
-                'https://', 'https://{username}:{password}@'.format(username=USERNAME, password=PASSWORD))
+                'https://', 'https://{username}:{password}@'.format(username=USERNAME, password=token))
             print("\n")
             cmd: str = "cd {dir} && git push -u --mirror -q {url}".format(
                 dir=r['path'], url=clone_url)
