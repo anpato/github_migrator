@@ -48,7 +48,7 @@ def disconnect():
 @socket.on('StartUpload', namespace='/upload')
 def init_upload(message):
     dirname = os.getcwd()
-    os.chmod(dirname, 0o755)
+    # os.chmod(dirname, 0o755)
     repos = message['repos']
     token = message['token']
     target = message['targetOrg']
