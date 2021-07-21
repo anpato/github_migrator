@@ -64,7 +64,7 @@ def create_repos(repos: list, user: str, token: str, out_org: str):
 
 
 def clear_dir(path):
-    os.system('sudo rm -rf {path}'.format(path=path))
+    os.system('rm -rf {path}'.format(path=path))
 
 
 def get_token():
