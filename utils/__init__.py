@@ -17,9 +17,10 @@ def clone(repos: list, target: str, token: str, user: str, dirname: str):
     storage_path = '{dirname}/uploads'.format(
         dirname=dirname, target=target)
     cloned_repos = []
+    
     if not os.path.isdir(storage_path):
-        os.system('chmod 777 uploads/*')
         os.system('mkdir {storage}'.format(storage=storage_path))
+        
     count = 1
     for repo in repos:
         try:
@@ -46,7 +47,7 @@ def create_repos(repos: list, user: str, token: str, out_org: str):
     for r in repos:
         body = {
             "visibility": "private",
-            "name": r['name'],
+            "name": r['names'],
             "description": r["desc"]
         }
         try:
