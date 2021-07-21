@@ -8,6 +8,7 @@ from resources.org import Org
 from utils import clone, create_repos, clear_dir
 from engineio.payload import Payload
 import os
+import logging
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -15,6 +16,11 @@ app = Flask(__name__)
 CORS(app)
 
 env = os.getenv('ENVIRONMENT')
+
+log = logging.getLogger('werkzeug')
+socket_log = logging.getLogger('tunnel.logger')
+socket_log.setLevel(logging.CRITICAL)
+log.setLevel(logging.ERROR)
 
 if env and env == 'production':
     app.env = env
@@ -27,10 +33,10 @@ api = Api(app)
 Payload.max_decode_packets = 500
 
 socket = SocketIO(app, cors_allowed_origins="*",
-                  engineio_logger=True,
+                  engineio_logger=False,
                   async_mode='threading',
                   ping_timeout=20,
-                  logger=True, max_decode_packets=500)
+                  logger=False, max_decode_packets=500)
 api.add_resource(Repos, '/repos')
 api.add_resource(Org, '/orgs')
 

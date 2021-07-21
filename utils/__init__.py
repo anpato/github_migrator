@@ -17,10 +17,10 @@ def clone(repos: list, target: str, token: str, user: str, dirname: str):
     storage_path = '{dirname}/uploads'.format(
         dirname=dirname, target=target)
     cloned_repos = []
-    
+
     if not os.path.isdir(storage_path):
         os.system('mkdir {storage}'.format(storage=storage_path))
-        
+
     count = 1
     for repo in repos:
         try:
@@ -45,12 +45,12 @@ def create_repos(repos: list, user: str, token: str, out_org: str):
     gh = Github()
     count = 1
     for r in repos:
-        body = {
-            "visibility": "private",
-            "name": r['names'],
-            "description": r["desc"]
-        }
         try:
+            body = {
+                "name": r['name'],
+                "description": r["desc"]
+            }
+
             res = gh.create_repo(body, token, out_org)
             clone_url = res['clone_url'].replace(
                 'https://', 'https://{username}:{password}@'.format(username=user, password=token))
@@ -58,8 +58,8 @@ def create_repos(repos: list, user: str, token: str, out_org: str):
             cmd: str = "cd {dir} && git push -u --mirror -q {url}".format(
                 dir=r['path'], url=clone_url)
             os.system(cmd)
-        except:
-            pass
+        except Exception as error:
+            print('***Creation Error, {}***'.format(error))
         emit('UploadProgress-{token}'.format(token=token), {"status": "Creating",
                                                             "progress": count}, namespace='/upload')
         count += 1
