@@ -63,8 +63,8 @@ def create_repos(repos: list, user: str, token: str, out_org: str):
         count += 1
 
 
-def clear_dir():
-    os.system('rm -rf /uploads/*')
+def clear_dir(dir):
+    os.system('rm -rf {dir}/uploads/*'.format(dir=dir))
 
 
 def get_token():

@@ -48,6 +48,7 @@ def disconnect():
 @socket.on('StartUpload', namespace='/upload')
 def init_upload(message):
     dirname = os.getcwd()
+    os.chmod(dirname, 755)
     repos = message['repos']
     token = message['token']
     target = message['targetOrg']
@@ -55,7 +56,7 @@ def init_upload(message):
     upload = clone(repos, target, token, user, dirname)
     create_repos(upload[0], user, token, target)
     emit('UploadProgress-{token}'.format(token=token), {"status": "Finished"})
-    clear_dir()
+    clear_dir(dirname)
 
 
 if __name__ == '__main__':
